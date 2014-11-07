@@ -1,0 +1,60 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link href="../bower_components/paper-dialog/paper-dialog.html" rel="import">
+<link href="../bower_components/paper-dialog/paper-dialog-transition.html" rel="import">
+
+<polymer-element name="new-post-card">
+  <template>
+    <style>
+      .card-header {
+        margin-bottom: 10px;
+      }
+      polyfill-next-selector { content: '.card-header h2'; }
+      .card-header ::content h2 {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 300;
+      }
+      polyfill-next-selector { content: '.card-header img'; }
+      .card-header ::content img {
+        width: 70px;
+        border-radius: 50%;
+        margin: 10px;
+      }
+      core-icon-button {
+        position: absolute;
+        top: 3px;
+        right: 3px;
+        color: #636363;
+      }
+    </style>
+
+    <paper-dialog id="dialog" heading="Create a Card" transition="paper-dialog-transition-center">
+      <div class="card-header" layout vertical left>
+        <paper-input id="name" label="Name" inputValue="{{name}}"></paper-input>
+        <paper-input id="text" multiline rows="3" label="Text" inputValue="{{text}}"></paper-input>
+        <paper-button raised affirmative style="background: #4285f4; color: white; width: 100px" on-click="{{create}}">OK</paper-button>
+      </div>
+    </paper-dialog>
+    <post-service id="service"></post-service>
+    <content></content>
+  </template>
+  <script>
+    Polymer({
+      create: function() {
+        var card = {
+          username: this.name,
+          text: this.text,
+          avatar: '../images/avatar-01.svg',
+          favorite: false
+        };
+        this.$.service.add(card);
+      },
+      toggle: function() {
+        this.$.dialog.toggle();
+      }
+    });
+  </script>
+</polymer-element>

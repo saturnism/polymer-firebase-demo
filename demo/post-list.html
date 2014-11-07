@@ -1,0 +1,51 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../post-service/post-service.html">
+<link rel="import" href="post-card.html">
+
+<polymer-element name="post-list" attributes="show">
+  <template>
+    <style>
+      :host {
+        display: block;
+        width: 100%;
+      }
+      post-card {
+        margin-bottom: 30px;
+      }
+    </style>
+    
+    <post-service id="service" posts="{{posts}}" postKeys="{{keys}}"></post-service>
+
+    <div layout vertical center>
+      <template repeat="{{key in keys}}">
+        <post-card
+          id="{{key}}"
+          favorite="{{posts[key].favorite}}"
+          on-favorite-tap="{{handleFavorite}}"
+          on-delete-tap="{{handleDelete}}"
+          hidden?="{{show == 'favorites' && !posts[key].favorite}}">
+          <img src="{{posts[key].avatar}}" width="70" height="70">
+          <h2>{{posts[key].username}}</h2>
+          <p>{{posts[key].text}}</p>
+        </post-card>
+      </template>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      ready: function() {
+        console.log('ready');
+        console.log(this.posts);
+      },
+      handleFavorite: function(event, detail, sender) {
+        var key = sender.templateInstance.model.key;
+        this.$.service.setFavorite(key);
+      },
+      handleDelete: function(event, detail, sender) {
+        var key = sender.templateInstance.model.key;
+        this.$.service.delete(key);
+      }
+    });
+  </script>
+</polymer-element>

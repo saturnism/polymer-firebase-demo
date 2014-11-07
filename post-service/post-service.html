@@ -1,0 +1,39 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-ajax/core-ajax.html">
+<link rel="import" href="../bower_components/firebase-element/firebase-element.html">
+
+<polymer-element name="post-service" attributes="posts postKeys">
+  <template>
+    <style>
+      :host {
+        display: none;
+      }
+    </style>
+
+    <firebase-element
+      id="base"
+      location="https://YOUR_FIREBASE.firebaseio.com/"
+      data="{{posts}}" 
+      keys="{{postKeys}}" 
+      childEvents 
+      log="true">
+    </firebase-element>
+  </template>
+  <script>
+    Polymer('post-service', {
+      add: function(card) {
+        var ref = this.$.base.push(card);
+        console.log('Created a key: ' + ref.name());
+        console.log(card);
+      },
+      setFavorite: function(key, isFavorite) {
+        console.log('Favorite changed: ' + key + ', now: ' + this.posts[key].favorite);
+        this.$.base.commitProperty(key);
+      },
+      delete: function(key) {
+        console.log('Deleted key: ' + key);
+        this.$.base.remove(key);
+      }
+    });
+  </script>
+</polymer-element>
